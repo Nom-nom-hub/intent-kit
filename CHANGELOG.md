@@ -5,6 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.17] - 2025-10-20
+
+### Fixed
+- Fixed GitHub releases already exists error
+- Ensured correct version handling in all workflows
+
+### Changed
+- Updated CHANGELOG for latest version
+
 ## [0.0.16] - 2025-10-20
 
 ### Fixed
@@ -64,6 +73,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 - N/A
+
+[0.0.16]: https://github.com/nom-nom-hub/intent-kit/compare/v0.0.15...v0.0.16
 
 [0.0.15]: https://github.com/nom-nom-hub/intent-kit/compare/v0.0.14...v0.0.15
 
