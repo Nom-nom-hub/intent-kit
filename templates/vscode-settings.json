@@ -1,0 +1,13 @@
+{
+    "chat.promptFilesRecommendations": {
+        "intentk.vision": true,
+        "intentk.goal": true,
+        "intentk.strategies": true,
+        "intentk.milestones": true,
+        "intentk.execute": true
+    },
+    "chat.tools.terminal.autoApprove": {
+        ".intent/scripts/bash/": true,
+        ".intent/scripts/powershell/": true
+    }
+}

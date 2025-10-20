@@ -1,0 +1,54 @@
+// For format details, see https://aka.ms/devcontainer.json 
+{
+	"name": "Intent Kit Development",
+	"image": "mcr.microsoft.com/devcontainers/python:3.11",
+	
+	// Features to add to the dev container. More info: https://containers.dev/features.
+	"features": {
+		"ghcr.io/devcontainers/features/node:1": {},
+		"ghcr.io/devcontainers/features/git:1": {}
+	},
+
+	// Use 'forwardPorts' to make a list of ports inside the container available locally.
+	// "forwardPorts": [],
+
+	// Use 'postCreateCommand' to run commands after the container is created.
+	"postCreateCommand": "pip install -e .[dev,cli] && python -m pip install uv && uv install",
+
+	// Configure tool-specific properties.
+	"customizations": {
+		"vscode": {
+			"extensions": [
+				"ms-python.python",
+				"ms-python.vscode-pylance",
+				"ms-python.flake8",
+				"ms-python.black-formatter",
+				"ms-toolsai.jupyter",
+				// [Claude Code]
+				"anthropic.claude",
+				// [Cursor]
+				"cursorio.cursor-chat",
+				"cursorio.cursor-compiler",
+				// [Qwen Code]
+				"alibaba-qwen.qwen-code",
+				// [opencode]
+				"open-code.open-code",
+				// [CodeBuddy CLI]
+				"codebuddy.codebuddy-vscode",
+				// [GitHub Copilot]
+				"GitHub.copilot",
+				"GitHub.copilot-chat"
+			],
+			"settings": {
+				"python.defaultInterpreterPath": "/usr/local/bin/python",
+				"python.linting.enabled": true,
+				"python.linting.flake8Enabled": true,
+				"python.formatting.provider": "black",
+				"python.formatting.blackPath": "/usr/local/bin/black"
+			}
+		}
+	}
+
+	// Uncomment to connect as root instead. More info: https://aka.ms/dev-containers-non-root.
+	// "remoteUser": "root"
+}

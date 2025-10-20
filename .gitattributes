@@ -1,0 +1,13 @@
+*.md linguist-language=Markdown
+*.py linguist-language=Python
+*.js linguist-language=JavaScript
+*.ts linguist-language=TypeScript
+*.tsx linguist-language=TypeScript
+*.jsx linguist-language=JavaScript
+*.json linguist-language=JSON
+*.yml linguist-language=YAML
+*.yaml linguist-language=YAML
+*.toml linguist-language=TOML
+*.lock linguist-vendored=true
+dist/** linguist-vendored=true
+node_modules/** linguist-vendored=true
