@@ -21,11 +21,13 @@ jobs:
 
       - name: Extract version from tag
         id: version
+        shell: bash
         run: |
           VERSION=${GITHUB_REF#refs/tags/v}
           echo "VERSION=$VERSION" >> $GITHUB_ENV
 
       - name: Create templates archives from project templates
+        shell: bash
         run: |
           # Create a full templates archive from the project's templates directory
           tar -czf intent-kit-templates-${{ env.VERSION }}.tar.gz templates/

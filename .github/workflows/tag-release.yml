@@ -21,6 +21,7 @@ jobs:
 
       - name: Get tag
         id: tag
+        shell: bash
         run: |
           TAG=${GITHUB_REF#refs/tags/}
           echo "tag=$TAG" >> $GITHUB_OUTPUT
@@ -47,6 +48,7 @@ jobs:
           prerelease: false
 
       - name: Build and Release Templates
+        shell: bash
         run: |
           # Create a directory for templates if it doesn't exist
           if [ -d "templates" ]; then
@@ -79,6 +81,7 @@ jobs:
           asset_content_type: application/zip
 
       - name: Build and Release CLI
+        shell: bash
         run: |
           # Install the package to make the CLI available
           pip install dist/*.whl

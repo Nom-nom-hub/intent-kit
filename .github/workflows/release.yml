@@ -31,6 +31,7 @@ jobs:
         run: python -m build
 
       - name: Generate release notes
+        shell: bash
         run: |
           # Extract release notes from CHANGELOG.md
           sed -n '/^## \[0\./,/^## \[0\./p' CHANGELOG.md | sed '2,$p' | head -n -1 > release_notes.txt
@@ -67,11 +68,13 @@ jobs:
 
       - name: Extract version from tag
         id: version
+        shell: bash
         run: |
           VERSION=${GITHUB_REF#refs/tags/v}
           echo "VERSION=$VERSION" >> $GITHUB_ENV
 
       - name: Create templates release assets from project templates
+        shell: bash
         run: |
           # Create template archives from the templates directory
           if [ -d "templates" ]; then
