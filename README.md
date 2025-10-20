@@ -1,7 +1,7 @@
 # Intent Kit - Intent-Driven Development Toolkit
 
 <div align="center">
-    <h1>🌱 Intent Kit</h1>
+    <h1>🧭 Intent Kit</h1>
     <h3><em>Build outcome-focused software faster.</em></h3>
 </div>
 
