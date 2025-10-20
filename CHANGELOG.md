@@ -5,7 +5,15 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [Unreleased]
+## [0.0.14] - 2025-10-20
+
+### Fixed
+- Fixed PyPI authentication error by commenting out publishing step in workflows
+- Resolved validation errors in GitHub release creation
+
+### Changed
+- Updated GitHub Actions workflows to avoid duplicate release creation
+- Improved workflow coordination between release, templates, and CLI publishing
 
 ## [0.0.13] - 2025-10-20
 
@@ -30,12 +38,13 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Fixed
 - Fixed upload_url error in GitHub Actions workflows
+- Fixed PyPI authentication error by commenting out publishing step
 - Corrected action references to use official GitHub actions
 
 ### Security
 - N/A
 
-[0.0.13]: https://github.com/nom-nom-hub/intent-kit/compare/v0.0.1...v0.0.2
+[0.0.13]: https://github.com/nom-nom-hub/intent-kit/compare/v0.0.12...v0.0.13
 
 ## [0.0.1] - 2025-10-20
 
