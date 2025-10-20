@@ -1,0 +1,52 @@
+name: Release Templates
+
+on:
+  push:
+    tags:
+      - 'v*.*.*'
+
+jobs:
+  create-templates:
+    runs-on: ubuntu-latest
+    permissions:
+      contents: write
+
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
+      - name: Extract version from tag
+        id: version
+        run: |
+          VERSION=${GITHUB_REF#refs/tags/v}
+          echo "VERSION=$VERSION" >> $GITHUB_ENV
+
+      - name: Create templates archives from project templates
+        run: |
+          # Create a full templates archive from the project's templates directory
+          tar -czf intent-kit-templates-${{ env.VERSION }}.tar.gz templates/
+          zip -r intent-kit-templates-${{ env.VERSION }}.zip templates/
+
+      - name: Upload templates assets
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: intent-kit-templates-${{ env.VERSION }}.tar.gz
+          asset_name: intent-kit-templates-${{ env.VERSION }}.tar.gz
+          asset_content_type: application/gzip
+
+      - name: Upload templates zip
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: intent-kit-templates-${{ env.VERSION }}.zip
+          asset_name: intent-kit-templates-${{ env.VERSION }}.zip
+          asset_content_type: application/zip

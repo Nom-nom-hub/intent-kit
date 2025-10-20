@@ -1,0 +1,86 @@
+name: Tag Release
+
+on:
+  push:
+    tags:
+      - 'v*'
+
+jobs:
+  tag-release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Get tag
+        id: tag
+        run: |
+          TAG=${GITHUB_REF#refs/tags/}
+          echo "tag=$TAG" >> $GITHUB_OUTPUT
+          echo "version=${TAG#v}" >> $GITHUB_OUTPUT
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          draft: false
+          prerelease: false
+
+      - name: Build and Release Templates
+        run: |
+          # Create a directory for templates if it doesn't exist
+          if [ -d "templates" ]; then
+            echo "Creating templates archive..."
+            tar -czf intent-kit-templates-${{ steps.tag.outputs.version }}.tar.gz -C . templates
+            zip -r intent-kit-templates-${{ steps.tag.outputs.version }}.zip templates/
+          else
+            echo "No templates directory found to create templates from"
+          fi
+
+      - name: Upload templates assets
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: intent-kit-templates-${{ steps.tag.outputs.version }}.tar.gz
+          asset_name: intent-kit-templates-${{ steps.tag.outputs.version }}.tar.gz
+          asset_content_type: application/gzip
+          
+      - name: Upload templates zip
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: intent-kit-templates-${{ steps.tag.outputs.version }}.zip
+          asset_name: intent-kit-templates-${{ steps.tag.outputs.version }}.zip
+          asset_content_type: application/zip
+
+      - name: Build and Release CLI
+        run: |
+          # Install the package to make the CLI available
+          pip install build
+          python -m build
+          
+          # Prepare CLI assets
+          pip install dist/*.whl
+          
+          # Verify CLI works
+          intent --help
+
+      - name: Upload CLI wheel
+        uses: actions/upload-release-asset@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          upload_url: ${{ github.event.release.upload_url }}
+          asset_path: dist/intent-kit-${{ steps.tag.outputs.version }}-py3-none-any.whl
+          asset_name: intent-kit-${{ steps.tag.outputs.version }}-py3-none-any.whl
+          asset_content_type: application/octet-stream
