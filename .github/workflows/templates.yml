@@ -1,9 +1,8 @@
 name: Release Templates
 
 on:
-  push:
-    tags:
-      - 'v*.*.*'
+  release:
+    types: [published]  # Trigger when a release is published
 
 jobs:
   create-templates:
@@ -14,24 +13,12 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Set up Python
-        uses: actions/setup-python@v4
-        with:
-          python-version: '3.11'
-
-      - name: Extract version from tag
-        id: version
-        shell: bash
-        run: |
-          VERSION=${GITHUB_REF#refs/tags/v}
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
-
       - name: Create templates archives from project templates
         shell: bash
         run: |
           # Create a full templates archive from the project's templates directory
-          tar -czf intent-kit-templates-${{ env.VERSION }}.tar.gz templates/
-          zip -r intent-kit-templates-${{ env.VERSION }}.zip templates/
+          tar -czf intent-kit-templates-${{ github.ref_name }}.tar.gz templates/
+          zip -r intent-kit-templates-${{ github.ref_name }}.zip templates/
 
       - name: Upload templates assets
         uses: actions/upload-release-asset@v1
@@ -39,8 +26,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          asset_path: intent-kit-templates-${{ env.VERSION }}.tar.gz
-          asset_name: intent-kit-templates-${{ env.VERSION }}.tar.gz
+          asset_path: intent-kit-templates-${{ github.ref_name }}.tar.gz
+          asset_name: intent-kit-templates-${{ github.ref_name }}.tar.gz
           asset_content_type: application/gzip
 
       - name: Upload templates zip
@@ -49,6 +36,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          asset_path: intent-kit-templates-${{ env.VERSION }}.zip
-          asset_name: intent-kit-templates-${{ env.VERSION }}.zip
+          asset_path: intent-kit-templates-${{ github.ref_name }}.zip
+          asset_name: intent-kit-templates-${{ github.ref_name }}.zip
           asset_content_type: application/zip

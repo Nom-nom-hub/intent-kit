@@ -1,4 +1,4 @@
-name: Tag Release
+name: Tag Release Alternative
 
 on:
   push:
@@ -35,67 +35,9 @@ jobs:
       - name: Build package
         run: python -m build
 
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
+      - name: Publish to PyPI
         env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          body: "Automated release for version ${{ steps.tag.outputs.version }}"
-          draft: false
-          prerelease: false
-
-      - name: Build and Release Templates
-        shell: bash
+          TWINE_USERNAME: __token__
+          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
         run: |
-          # Create a directory for templates if it doesn't exist
-          if [ -d "templates" ]; then
-            echo "Creating templates archive..."
-            tar -czf intent-kit-templates-${{ steps.tag.outputs.version }}.tar.gz -C . templates
-            zip -r intent-kit-templates-${{ steps.tag.outputs.version }}.zip templates/
-          else
-            echo "No templates directory found to create templates from"
-          fi
-
-      # Use upload-url from the create-release step
-      - name: Upload templates assets
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: intent-kit-templates-${{ steps.tag.outputs.version }}.tar.gz
-          asset_name: intent-kit-templates-${{ steps.tag.outputs.version }}.tar.gz
-          asset_content_type: application/gzip
-          
-      - name: Upload templates zip
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: intent-kit-templates-${{ steps.tag.outputs.version }}.zip
-          asset_name: intent-kit-templates-${{ steps.tag.outputs.version }}.zip
-          asset_content_type: application/zip
-
-      - name: Build and Release CLI
-        shell: bash
-        run: |
-          # Install the package to make the CLI available
-          pip install dist/*.whl
-          
-          # Verify CLI works
-          intent --help
-
-      # Use upload-url from the create-release step
-      - name: Upload CLI wheel
-        uses: actions/upload-release-asset@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: dist/intent-kit-${{ steps.tag.outputs.version }}-py3-none-any.whl
-          asset_name: intent-kit-${{ steps.tag.outputs.version }}-py3-none-any.whl
-          asset_content_type: application/octet-stream
+          twine upload dist/*

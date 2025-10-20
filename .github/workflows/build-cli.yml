@@ -1,9 +1,8 @@
-name: Build and Release CLI
+name: Build Multi-Platform CLI
 
 on:
-  push:
-    tags:
-      - 'v*.*.*'
+  release:
+    types: [published]  # Trigger when a release is published
 
 jobs:
   build-and-release-cli:
@@ -31,13 +30,6 @@ jobs:
         with:
           python-version: '3.11'
 
-      - name: Extract version from tag
-        id: version
-        shell: bash
-        run: |
-          VERSION=${GITHUB_REF#refs/tags/v}
-          echo "VERSION=$VERSION" >> $GITHUB_ENV
-
       - name: Install dependencies
         run: |
           python -m pip install --upgrade pip
@@ -48,11 +40,8 @@ jobs:
 
       - name: Build CLI executable with PyInstaller
         run: |
-          if [ "${{ matrix.target }}" = "windows" ]; then
-            pyinstaller --onefile --name ${{ matrix.asset_name }} src/intent_kit/__main__.py
-          else
-            pyinstaller --onefile --name ${{ matrix.asset_name }} src/intent_kit/__main__.py
-          fi
+          pip install dist/*.whl
+          pyinstaller --onefile --name ${{ matrix.asset_name }} src/intent_kit/__main__.py
 
       - name: Upload CLI executable
         uses: actions/upload-release-asset@v1
