@@ -23,4 +23,10 @@ git config --local user.email "action@github.com"
 git config --local user.name "GitHub Action"
 git add pyproject.toml
 git commit -m "chore: update version to $VERSION"
-git push origin HEAD:main
+
+# Only push if we're not in detached HEAD state
+if [[ $(git rev-parse --abbrev-ref HEAD) != "HEAD" ]]; then
+    git push origin main
+else
+    echo "In detached HEAD state, skipping direct push to main"
+fi
