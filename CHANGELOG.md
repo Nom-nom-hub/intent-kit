@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.18] - 2025-10-20
+
+### Fixed
+- Fixed empty version variable issue in GitHub Actions workflows
+- Corrected variable assignment timing in templates workflow
+- Ensured version variable is available when needed for asset uploads
+
+### Changed
+- Improved version extraction consistency across workflows
+
 ## [0.0.17] - 2025-10-20
 
 ### Fixed
@@ -73,6 +83,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 - N/A
+
+[0.0.17]: https://github.com/nom-nom-hub/intent-kit/compare/v0.0.16...v0.0.17
 
 [0.0.16]: https://github.com/nom-nom-hub/intent-kit/compare/v0.0.15...v0.0.16
 

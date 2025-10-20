@@ -13,23 +13,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Create templates archives from project templates
-        shell: bash
-        run: |
-          # Extract version from tag ref (removing 'refs/tags/' prefix and 'v' prefix)
-          VERSION=${GITHUB_REF#refs/tags/}
-          VERSION=${VERSION#v}  # Remove 'v' prefix if present
-          # Create a full templates archive from the project's templates directory
-          tar -czf intent-kit-templates-${VERSION}.tar.gz templates/
-          zip -r intent-kit-templates-${VERSION}.zip templates/
-
-      - name: Extract version for asset naming
+      - name: Extract version and create templates
         shell: bash
         run: |
           # Extract version from tag ref (removing 'refs/tags/' prefix and 'v' prefix)
           VERSION=${GITHUB_REF#refs/tags/}
           VERSION=${VERSION#v}  # Remove 'v' prefix if present
           echo "ASSET_VERSION=$VERSION" >> $GITHUB_ENV
+          # Create a full templates archive from the project's templates directory
+          tar -czf intent-kit-templates-${VERSION}.tar.gz templates/
+          zip -r intent-kit-templates-${VERSION}.zip templates/
 
       - name: Upload templates assets
         uses: actions/upload-release-asset@v1

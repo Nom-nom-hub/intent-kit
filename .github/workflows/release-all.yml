@@ -51,16 +51,17 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: Create templates release assets from project templates
+      - name: Extract version and create templates
         shell: bash
         run: |
           # Extract version from tag ref (removing 'refs/tags/' prefix and 'v' prefix)
           VERSION=${GITHUB_REF#refs/tags/}
           VERSION=${VERSION#v}  # Remove 'v' prefix if present
+          echo "WHEEL_VERSION=$VERSION" >> $GITHUB_ENV
           # Create template archives from the templates directory
           if [ -d "templates" ]; then
-            tar -czf intent-kit-templates-v${VERSION}.tar.gz -C . templates
-            zip -r intent-kit-templates-v${VERSION}.zip templates/
+            tar -czf intent-kit-templates-${VERSION}.tar.gz -C . templates
+            zip -r intent-kit-templates-${VERSION}.zip templates/
           else
             echo "No templates directory found to create templates from"
           fi
