@@ -107,9 +107,9 @@ jobs:
           asset_name: intent-cli
           asset_content_type: application/octet-stream
 
-      - name: Publish to PyPI
-        env:
-          TWINE_USERNAME: __token__
-          TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
-        run: |
-          twine upload dist/*
+      # - name: Publish to PyPI  # Commented out to avoid authentication errors
+      #   env:
+      #     TWINE_USERNAME: __token__
+      #     TWINE_PASSWORD: ${{ secrets.PYPI_API_TOKEN }}
+      #   run: |
+      #     twine upload dist/*
