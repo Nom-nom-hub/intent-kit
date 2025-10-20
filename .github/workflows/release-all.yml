@@ -96,7 +96,7 @@ jobs:
 
       - name: Build CLI executable with PyInstaller
         run: |
-          pip install dist/intent-kit-${{ env.WHEEL_VERSION }}-py3-none-any.whl
+          pip install dist/*.whl
           pyinstaller --onefile --name intent-cli src/intent_kit/__main__.py
 
       - name: Upload Python wheel to release

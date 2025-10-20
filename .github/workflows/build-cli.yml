@@ -38,17 +38,10 @@ jobs:
       - name: Build package
         run: python -m build
 
-      - name: Extract version for wheel file
-        shell: bash
-        run: |
-          # Extract version from tag ref (removing 'refs/tags/' prefix and 'v' prefix)
-          VERSION=${GITHUB_REF#refs/tags/}
-          VERSION=${VERSION#v}  # Remove 'v' prefix if present
-          echo "WHEEL_VERSION=$VERSION" >> $GITHUB_ENV
-
       - name: Build CLI executable with PyInstaller
         run: |
-          pip install dist/intent-kit-${{ env.WHEEL_VERSION }}-py3-none-any.whl
+          # Find and install the wheel file (since it should be in dist/ after build)
+          pip install dist/*.whl
           pyinstaller --onefile --name ${{ matrix.asset_name }} src/intent_kit/__main__.py
 
       - name: Upload CLI executable
