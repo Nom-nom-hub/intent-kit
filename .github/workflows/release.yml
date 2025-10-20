@@ -30,23 +30,26 @@ jobs:
       - name: Build package
         run: python -m build
 
-      - name: Generate release notes
+      - name: Generate release notes from git history
         shell: bash
         run: |
-          # Extract only the current version's release notes from CHANGELOG.md
-          VERSION=${GITHUB_REF#refs/tags/}
-          VERSION=${VERSION#v}  # Remove 'v' prefix if present
+          # Get the previous tag to compare against
+          PREV_TAG=$(git describe --tags --abbrev=0 $(git rev-list --tags --skip=1 --max-count=1) 2>/dev/null || echo "")
           
-          # Use awk to extract content between the current version header and the next version header
-          awk -v version="$VERSION" '
-          /^## \[Unreleased\]/ { in_section = ($2 == "[Unreleased]") }
-          "^## ["version"]" { in_section = 1; next }
-          /^## \[/ && in_section { exit }
-          in_section { print }
-          ' CHANGELOG.md > release_notes.txt
+          # Get commit messages between the previous tag and current tag
+          if [ -n "$PREV_TAG" ]; then
+              git log --oneline --no-merges $PREV_TAG..HEAD > release_notes.txt
+          else
+              git log --oneline --no-merges ${{ github.ref }}~10..HEAD > release_notes.txt
+          fi
+          
+          # Format the release notes
+          echo "## Release v${GITHUB_REF#refs/tags/v}" > formatted_release_notes.txt
+          echo "" >> formatted_release_notes.txt
+          cat release_notes.txt >> formatted_release_notes.txt
           
           echo "RELEASE_NOTES<<EOF" >> $GITHUB_ENV
-          cat release_notes.txt >> $GITHUB_ENV
+          cat formatted_release_notes.txt >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
 
       - name: Create GitHub Release
