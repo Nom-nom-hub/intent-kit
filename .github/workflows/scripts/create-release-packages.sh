@@ -32,3 +32,37 @@ if [ -d "dist" ] && [ "$(ls -A dist)" ]; then
         fi
     done
 fi
+
+# Define AI agents to create templates for
+AGENTS=("copilot" "claude" "gemini" "cursor" "qwen" "opencode" "codex" "windsurf" "kilocode" "auggie" "roo" "codebuddy" "q")
+
+# Create templates directory if it doesn't exist
+mkdir -p templates_for_agents
+
+# For each agent, create an agent-specific templates directory
+for agent in "${AGENTS[@]}"; do
+  # Create directories for different script types
+  mkdir -p "templates_for_agents/${agent}/sh"
+  mkdir -p "templates_for_agents/${agent}/ps"
+  
+  # Copy all templates to agent-specific directories
+  cp -r templates/* "templates_for_agents/${agent}/sh/" 2>/dev/null || echo "No templates to copy for sh"
+  cp -r templates/* "templates_for_agents/${agent}/ps/" 2>/dev/null || echo "No templates to copy for ps"
+  
+  # Create archives for each agent and script type
+  if [ -d "templates_for_agents/${agent}/sh" ] && [ "$(ls -A templates_for_agents/${agent}/sh)" ]; then
+    (cd "templates_for_agents/${agent}/sh" && tar -czf "../../../intent-kit-template-${agent}-sh-v${ASSET_VERSION}.tar.gz" .)
+    (cd "templates_for_agents/${agent}/sh" && zip -r "../../../intent-kit-template-${agent}-sh-v${ASSET_VERSION}.zip" .)
+  fi
+  
+  if [ -d "templates_for_agents/${agent}/ps" ] && [ "$(ls -A templates_for_agents/${agent}/ps)" ]; then
+    (cd "templates_for_agents/${agent}/ps" && tar -czf "../../../intent-kit-template-${agent}-ps-v${ASSET_VERSION}.tar.gz" .)
+    (cd "templates_for_agents/${agent}/ps" && zip -r "../../../intent-kit-template-${agent}-ps-v${ASSET_VERSION}.zip" .)
+  fi
+done
+
+# Also create a general templates archive
+if [ -d "templates" ] && [ "$(ls -A templates)" ]; then
+  tar -czf "intent-kit-templates-v${ASSET_VERSION}.tar.gz" templates/
+  zip -r "intent-kit-templates-v${ASSET_VERSION}.zip" templates/
+fi
