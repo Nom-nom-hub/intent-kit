@@ -7,7 +7,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ## [Unreleased]
 
-## [0.0.10] - 2025-10-20
+## [0.0.13] - 2025-10-20
 
 ### Added
 - GitHub Actions workflows for automated releases
@@ -35,7 +35,7 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 ### Security
 - N/A
 
-[0.0.10]: https://github.com/nom-nom-hub/intent-kit/compare/v0.0.1...v0.0.2
+[0.0.13]: https://github.com/nom-nom-hub/intent-kit/compare/v0.0.1...v0.0.2
 
 ## [0.0.1] - 2025-10-20
 
