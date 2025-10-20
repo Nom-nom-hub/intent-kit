@@ -14,12 +14,25 @@ jobs:
         with:
           fetch-depth: 0
 
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+
       - name: Get tag
         id: tag
         run: |
           TAG=${GITHUB_REF#refs/tags/}
           echo "tag=$TAG" >> $GITHUB_OUTPUT
           echo "version=${TAG#v}" >> $GITHUB_OUTPUT
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install build
+
+      - name: Build package
+        run: python -m build
 
       - name: Create Release
         id: create_release
@@ -29,6 +42,7 @@ jobs:
         with:
           tag_name: ${{ github.ref }}
           release_name: Release ${{ github.ref }}
+          body: "Automated release for version ${{ steps.tag.outputs.version }}"
           draft: false
           prerelease: false
 
@@ -43,12 +57,13 @@ jobs:
             echo "No templates directory found to create templates from"
           fi
 
+      # Use upload-url from the create-release step
       - name: Upload templates assets
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ github.event.release.upload_url }}
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: intent-kit-templates-${{ steps.tag.outputs.version }}.tar.gz
           asset_name: intent-kit-templates-${{ steps.tag.outputs.version }}.tar.gz
           asset_content_type: application/gzip
@@ -58,7 +73,7 @@ jobs:
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ github.event.release.upload_url }}
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: intent-kit-templates-${{ steps.tag.outputs.version }}.zip
           asset_name: intent-kit-templates-${{ steps.tag.outputs.version }}.zip
           asset_content_type: application/zip
@@ -66,21 +81,18 @@ jobs:
       - name: Build and Release CLI
         run: |
           # Install the package to make the CLI available
-          pip install build
-          python -m build
-          
-          # Prepare CLI assets
           pip install dist/*.whl
           
           # Verify CLI works
           intent --help
 
+      # Use upload-url from the create-release step
       - name: Upload CLI wheel
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ github.event.release.upload_url }}
+          upload_url: ${{ steps.create_release.outputs.upload_url }}
           asset_path: dist/intent-kit-${{ steps.tag.outputs.version }}-py3-none-any.whl
           asset_name: intent-kit-${{ steps.tag.outputs.version }}-py3-none-any.whl
           asset_content_type: application/octet-stream
