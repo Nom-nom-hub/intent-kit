@@ -71,8 +71,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: intent-kit-templates-v${{ github.ref_name }}.tar.gz
-          asset_name: intent-kit-templates-v${{ github.ref_name }}.tar.gz
+          asset_path: intent-kit-templates-${{ env.WHEEL_VERSION }}.tar.gz
+          asset_name: intent-kit-templates-${{ env.WHEEL_VERSION }}.tar.gz
           asset_content_type: application/gzip
 
       - name: Upload templates zip to release
@@ -81,8 +81,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ steps.create_release.outputs.upload_url }}
-          asset_path: intent-kit-templates-v${{ github.ref_name }}.zip
-          asset_name: intent-kit-templates-v${{ github.ref_name }}.zip
+          asset_path: intent-kit-templates-${{ env.WHEEL_VERSION }}.zip
+          asset_name: intent-kit-templates-${{ env.WHEEL_VERSION }}.zip
           asset_content_type: application/zip
 
       - name: Extract version for wheel file

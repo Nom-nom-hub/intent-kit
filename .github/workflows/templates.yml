@@ -20,8 +20,16 @@ jobs:
           VERSION=${GITHUB_REF#refs/tags/}
           VERSION=${VERSION#v}  # Remove 'v' prefix if present
           # Create a full templates archive from the project's templates directory
-          tar -czf intent-kit-templates-v${VERSION}.tar.gz templates/
-          zip -r intent-kit-templates-v${VERSION}.zip templates/
+          tar -czf intent-kit-templates-${VERSION}.tar.gz templates/
+          zip -r intent-kit-templates-${VERSION}.zip templates/
+
+      - name: Extract version for asset naming
+        shell: bash
+        run: |
+          # Extract version from tag ref (removing 'refs/tags/' prefix and 'v' prefix)
+          VERSION=${GITHUB_REF#refs/tags/}
+          VERSION=${VERSION#v}  # Remove 'v' prefix if present
+          echo "ASSET_VERSION=$VERSION" >> $GITHUB_ENV
 
       - name: Upload templates assets
         uses: actions/upload-release-asset@v1
@@ -29,8 +37,8 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          asset_path: intent-kit-templates-v${{ github.ref_name }}.tar.gz
-          asset_name: intent-kit-templates-v${{ github.ref_name }}.tar.gz
+          asset_path: intent-kit-templates-${{ env.ASSET_VERSION }}.tar.gz
+          asset_name: intent-kit-templates-${{ env.ASSET_VERSION }}.tar.gz
           asset_content_type: application/gzip
 
       - name: Upload templates zip
@@ -39,6 +47,6 @@ jobs:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
           upload_url: ${{ github.event.release.upload_url }}
-          asset_path: intent-kit-templates-v${{ github.ref_name }}.zip
-          asset_name: intent-kit-templates-v${{ github.ref_name }}.zip
+          asset_path: intent-kit-templates-${{ env.ASSET_VERSION }}.zip
+          asset_name: intent-kit-templates-${{ env.ASSET_VERSION }}.zip
           asset_content_type: application/zip

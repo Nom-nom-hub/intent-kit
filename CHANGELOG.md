@@ -5,6 +5,16 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [0.0.16] - 2025-10-20
+
+### Fixed
+- Fixed double 'v' prefix issue in template asset filenames
+- Corrected asset path references in GitHub Actions workflows
+- Improved version extraction consistency across workflows
+
+### Changed
+- Updated workflows to use consistent version variable across all steps
+
 ## [0.0.15] - 2025-10-20
 
 ### Fixed
@@ -54,6 +64,8 @@ and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0
 
 ### Security
 - N/A
+
+[0.0.15]: https://github.com/nom-nom-hub/intent-kit/compare/v0.0.14...v0.0.15
 
 [0.0.14]: https://github.com/nom-nom-hub/intent-kit/compare/v0.0.13...v0.0.14
 
