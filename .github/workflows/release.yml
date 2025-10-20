@@ -33,8 +33,18 @@ jobs:
       - name: Generate release notes
         shell: bash
         run: |
-          # Extract release notes from CHANGELOG.md
-          sed -n '/^## \[0\./,/^## \[0\./p' CHANGELOG.md | sed '2,$p' | head -n -1 > release_notes.txt
+          # Extract only the current version's release notes from CHANGELOG.md
+          VERSION=${GITHUB_REF#refs/tags/}
+          VERSION=${VERSION#v}  # Remove 'v' prefix if present
+          
+          # Use awk to extract content between the current version header and the next version header
+          awk -v version="$VERSION" '
+          /^## \[Unreleased\]/ { in_section = ($2 == "[Unreleased]") }
+          "^## ["version"]" { in_section = 1; next }
+          /^## \[/ && in_section { exit }
+          in_section { print }
+          ' CHANGELOG.md > release_notes.txt
+          
           echo "RELEASE_NOTES<<EOF" >> $GITHUB_ENV
           cat release_notes.txt >> $GITHUB_ENV
           echo "EOF" >> $GITHUB_ENV
