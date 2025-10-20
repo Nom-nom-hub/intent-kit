@@ -15,6 +15,9 @@ ASSET_VERSION=${VERSION#v}  # Remove 'v' prefix if present
 
 echo "Creating release packages for version $VERSION"
 
+# Install build module if not already available
+python -m pip install build
+
 # Build the Python package
 python -m build
 
