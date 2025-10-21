@@ -21,7 +21,19 @@ sed -i.bak "s/version = \".*\"/version = \"$VERSION_NUMBER\"/" pyproject.toml &&
 # Commit the change
 git config --local user.email "action@github.com"
 git config --local user.name "GitHub Action"
-git add pyproject.toml
+
+# Add all modified files
+git add pyproject.toml CHANGELOG.md
+
+# Add any other relevant files that might have been modified
+if [ -f "intent_kit-*.whl" ] || [ -f "intent_kit-*.tar.gz" ]; then
+    git add intent_kit-*.whl intent_kit-*.tar.gz 2>/dev/null || true
+fi
+
+# Add release note files if they exist
+git add release_notes.txt formatted_release_notes.txt 2>/dev/null || true
+
+# Commit with all changes
 git commit -m "chore: update version to $VERSION"
 
 # Only push if we're not in detached HEAD state
