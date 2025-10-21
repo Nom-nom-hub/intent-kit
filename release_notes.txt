@@ -1,0 +1,2 @@
+f116eae refactor(core): use keyword arguments in create_local_intent_template call
+bd8152e chore: update version to v0.0.22
