@@ -38,7 +38,7 @@ git commit -m "chore: update version to $VERSION"
 
 # Only push if we're not in detached HEAD state
 if [[ $(git rev-parse --abbrev-ref HEAD) != "HEAD" ]]; then
-    git push origin main
+    git push origin master
 else
-    echo "In detached HEAD state, skipping direct push to main"
+    echo "In detached HEAD state, skipping direct push to master"
 fi
