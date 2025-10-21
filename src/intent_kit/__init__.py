@@ -1014,7 +1014,7 @@ def download_and_extract_template(project_path: Path, ai_assistant: str, script_
     """Create a new Intent Kit project with local template structure.
     Returns project_path. Uses tracker if provided.
     """
-    return create_local_intent_template(project_path, ai_assistant, script_type, is_current_dir, verbose, tracker)
+    return create_local_intent_template(project_path, ai_assistant, script_type, is_current_dir, verbose=verbose, tracker=tracker)
 
 def ensure_executable_scripts(project_path: Path, tracker: StepTracker | None = None) -> None:
     """Ensure POSIX .sh scripts under .intent/scripts (recursively) have execute bits (no-op on Windows)."""
